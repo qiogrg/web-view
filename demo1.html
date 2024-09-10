@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>H5 页面</title>
+</head>
+<body>
+  <button id="takePhotoBtn">拍照上传</button>
+
+  <script>
+    const takePhotoBtn = document.getElementById('takePhotoBtn');
+
+    takePhotoBtn.addEventListener('click', function () {
+      // 向小程序发送消息，请求拍照上传
+      const message = {
+        type: 'uploadPhoto'
+      };
+      window.webkit.messageHandlers.jsbridge.postMessage(message);
+    });
+
+    // 接收小程序发送的消息
+    window.addEventListener('message', function (e) {
+      const message = e.data;
+      console.log('Received message from mini program:', message);
+
+      // 处理来自小程序的消息
+      if (message.type === 'uploadComplete') {
+        const imageUrl = message.imageUrl;
+        // 在页面上展示上传完成的图片
+        const imgElement = document.createElement('img');
+        imgElement.src = imageUrl;
+        document.body.appendChild(imgElement);
+      }
+    });
+  </script>
+</body>
+</html>
